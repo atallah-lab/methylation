@@ -1,0 +1,135 @@
+---
+title: "Methylation Tutorial - 3"
+output: 
+  html_document:
+    toc: true # table of content true
+    toc_depth: 3  # upto three depths of headings (specified by #, ## and ###)
+    number_sections: false  ## if you want number sections at each table header
+    theme: yeti  # many options for theme.
+    highlight: tango  # specifies the syntax highlighting style
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r install_special, include=FALSE}
+# Uncomment the following to run a custom version of TCGAbiolinks from gerald's github.
+#install.packages("/Users/geraldmccollam/2019Code/Atallah/TCGAbiolinks", repos = NULL, type="source")
+```
+
+### Using TCGAbiolinks
+
+This is the third part in a tutorial presenting workflows for analysing Illumina 450K methylation data using R. We've focused on [minfi](https://www.bioconductor.org/packages/release/bioc/html/minfi.html) in earlier sections and at the end of the last tutorial we considered several functions provided by [TCGAbiolinks](http://bioconductor.org/packages/release/bioc/html/TCGAbiolinks.html). TCGAbiolinks makes it relatively easy to download methylation data directly from The Cancer Genome Atlas (TCGA). To start we import 
+TCGAbiolinks along with [SummarizedExperiment](https://www.bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html).
+
+```{r imports, message=FALSE}
+ library(TCGAbiolinks)
+ library(SummarizedExperiment)
+```
+
+### GDCquery, GDCdownload, GDCprepare
+
+GDCquery uses the GDC API to search and filter results by the features requested. The following will create a query against the TCGA-LUSC project that requests 450k methylation data for two paired samples using their specific barcode identifiers. 
+
+```{r query, message=FALSE}
+query.met.gbm <- GDCquery(project = "TCGA-GBM", 
+                           legacy = TRUE, 
+                           data.category = "DNA methylation",
+                           platform = "Illumina Human Methylation 450",
+                           barcode = c("TCGA-74-6573-01A-12D-1844-05", "TCGA-74-6573-11A-02D-1844-05"))
+
+GDCdownload(query.met.gbm) # executes the query and downloads the files locally. 
+```
+
+Once downloaded the data is saved in a directory with the project name and a sub-folder with the data.category, in this example it is "TCGA-LUSC/DNA_methylation".
+
+```{r prepare, message=FALSE}
+met.gbm.450 <- GDCprepare(query = query.met.gbm,
+                        save = TRUE,
+                        save.filename = "GBMmet-paired.rda" ,
+                        summarizedExperiment = TRUE)
+```
+
+### Summarized Experiment
+
+The data is 'prepared' as a __SummarizedExperiment__ and can be accessed using the accessor functions __assay__ for the data information, __rowRanges__ for the range of values in each row, and __colData__ for the sample information (patient, batch, sample type, etc).
+
+```{r summarized, message=FALSE}
+head(assay(met.gbm.450))
+```
+
+Here we have 2 paired tumor/normal samples represented in the object by the columns 'TCGA-43-6771-01A-11D-1818-05' and 'TCGA-43-6771-11A-01D-1818-05'. Each row (feature) is a single CpG site defined in terms of the Illumina 450k annotation. Running __rowRanges__ indicates that some rows are not CpG's loci.  
+
+```{r message=FALSE}
+rowRanges(met.gbm.450)
+```
+
+We can get a count of the number of rows by running the R length function on row.names.
+
+```{r message=FALSE}
+length(row.names(met.gbm.450))
+```
+
+The non-CpG rows are SNPs and are not required for this analysis. We remove them using __subset__ and __is.na__. This removes all probes containing NA:
+
+```{r message=FALSE}
+# removes NA rows
+met.gbm.450 <- subset(met.gbm.450,subset = (rowSums(is.na(assay(met.gbm.450))) == 0))
+```
+
+The above removes ~90k rows. 
+
+```{r message=FALSE}
+length(row.names(met.gbm.450))
+```
+
+### Analysis
+
+```{r analysis, message=FALSE, eval = FALSE}
+#result <- TCGAanalyze_DMR(met.gbm.450, # a RangedSummarizedExperiment object
+#                          groupCol = "barcode", # a column in the colData matrix
+#                          group1 = "TCGA-43-6771-01A-11D-1818-05", # tumor samples
+#                          group2 = "TCGA-43-6771-11A-01D-1818-05", # normal samples
+#                          p.cut = 0.001,
+#                          plot.filename = "jhu_volcano.pdf") 
+```
+```{r message=FALSE}
+# Calculating the difference between the mean methylation of the groups...
+# Error in rowMeans(m[, idx1], na.rm = TRUE) : 'x' must be an array of at least two dimensions
+
+m <- assay(met.gbm.450)
+head(m)
+
+idx1 <- which(colData(met.gbm.450)[,"barcode"] == "TCGA-74-6573-01A-12D-1844-05") # tumor
+idx2 <- which(colData(met.gbm.450)[,"barcode"] == "TCGA-74-6573-11A-02D-1844-05") # normal
+
+# The error is being generated from rowMeans...
+# mean.g1 <- rowMeans(m[,idx1], na.rm = TRUE) # selects all elements of the first column.
+# mean.g2 <- rowMeans(m[,idx2], na.rm = TRUE) # selects all elements of the second column.
+
+# The problem is m[,idx2] is a 1-D array while rowMeans expects a 2-D at minimum. 
+# One solution might be to cast m[,idx2] as a dataframe: df <- data.frame(m[,idx1]).
+
+mean.g1 <- rowMeans(data.frame(m[,idx1]), na.rm = TRUE)
+mean.g2 <- rowMeans(data.frame(m[,idx2]), na.rm = TRUE)
+diffmean <- mean.g2 - mean.g1
+head(diffmean)
+```
+
+```{r message=FALSE}
+length(diffmean) == length(met.gbm.450) # same dimension?
+diffmean <- as.matrix(diffmean) # convert numeric vector to a matrix
+colnames(diff_head) <- c('Delta') # change the column name.
+diff_head <- head(diffmean, n=100) # take first 100.
+met.gbm.450_head <- head(met.gbm.450, n=100) # take first 100.
+rows_ <- rowRanges(met.gbm.450_head) # this returns a GRanges object. 
+
+
+write.csv(diff_head, "diff_gbm.csv")
+write.csv(assay(met.gbm.450_head), "met.gbm.csv")
+
+com <- cbind(met.gbm.450, diffmean)
+
+m_head <- head(m, n=100)
+```

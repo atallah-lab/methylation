@@ -1,0 +1,4 @@
+File ID	File Name	Data Category	Data Type	Project ID	Case ID	Sample ID	Sample Type
+f3023c7b-b17d-47ad-8143-2d45af04c1d2	jhu-usc.edu_COAD.HumanMethylation450.1.lvl-3.TCGA-AA-3492-11A-01D-1407-05.gdc_hg38.txt	DNA Methylation	Methylation Beta Value	TCGA-COAD	TCGA-AA-3492	TCGA-AA-3492-11A	Solid Tissue Normal
+54915911-45bd-4ca1-a67b-a8bfc974aad5	jhu-usc.edu_COAD.HumanMethylation450.1.lvl-3.TCGA-A6-2680-11A-01D-1551-05.gdc_hg38.txt	DNA Methylation	Methylation Beta Value	TCGA-COAD	TCGA-A6-2680	TCGA-A6-2680-11A	Solid Tissue Normal
+43cf5311-cc6f-4da8-ab03-cae8c13aa26d	jhu-usc.edu_COAD.HumanMethylation450.3.lvl-3.TCGA-AA-3712-11A-01D-1721-05.gdc_hg38.txt	DNA Methylation	Methylation Beta Value	TCGA-COAD	TCGA-AA-3712	TCGA-AA-3712-11A	Solid Tissue Normal

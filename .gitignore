@@ -1,0 +1,117 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# Python and Jupyter
+.ipynb_checkpoints/
+*.pyc
+v3/
+.DS_Store
+extras/
+
+# Skip the large PP presentations
+*.pptx
+
+# produced vignettes
+tutorials/*.html
+vignettes/*.html
+vignettes/*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and R markdown default cache directories
+/*_cache/
+/cache/
+Tutorial-1_cache/
+Tutorial-1_files/
+Tutorial-2_cache/
+Tutorial-2_files/
+Tutorial-3_cache/
+Tutorial-3_files/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+# Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
+rsconnect/
+
+# workflow specific
+workflow/data/*
+*tar.gz
+tutorials/GDCdata/*
+tutorials/Human_genes__GRCh37_p13_.rda
+tutorials/LUSCmet-paired.rda
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# mkdocs documentation
+/site
+
+# odds and sods
+GSE42308.xlsx
+humanmethylation450_dbsnp137.snpupdate.table.v2.sorted.txt
+data/HumanMethylation450_15017482_v1-2.csv

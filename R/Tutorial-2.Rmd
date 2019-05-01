@@ -1,0 +1,131 @@
+---
+title: "Methylation Tutorial - 2"
+output: 
+  html_document:
+    toc: true # table of content true
+    toc_depth: 3  # upto three depths of headings (specified by #, ## and ###)
+    number_sections: false  ## if you want number sections at each table header
+    theme: yeti  # many options for theme.
+    highlight: tango  # specifies the syntax highlighting style
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Section Two
+
+This is the second part of a tutorial that presents workflows for analysing Illumina 450K methylation data using R. In [Section One](./Tutorial-1.html) we looked at the basic [minfi](https://www.bioconductor.org/packages/release/bioc/html/minfi.html) classes and how they work together. Here we go further and perform steps that prepare us for the analysis parts in [Section Three](./Tutorial-3.html).
+
+## Annotation of Methylation Values
+
+We load the minfi and [limma](https://bioconductor.org/packages/release/bioc/html/limma.html) packages. The limma package was originally developed for gene expression microarray analysis. Since it operates on a matrix of values it may be applied to any type that can be converted to an R matrix.
+
+```{r message=FALSE}
+library(limma)
+library(minfi)
+```
+
+Load a matched set of normal/tumor methylation beta values from TCGA. I disambiguate readTCGA because there are other functions outside of minfi with the same name.
+```{r message=FALSE}
+lusc_normal_file <- '../data/johnshopkins-data/LUSC-PAIRED/LUSC_Normal-TCGA-43-6771.txt'
+lusc_tumor_file  <- '../data/johnshopkins-data/LUSC-PAIRED/LUSC_Tumor-TCGA-43-6771.txt'
+
+lusc_normal_grset <- minfi::readTCGA(keyName = "Composite Element REF", 
+                              Betaname = "Beta_value", lusc_normal_file)
+lusc_tumor_grset <- minfi::readTCGA(keyName = "Composite Element REF", 
+                              Betaname = "Beta_value", lusc_tumor_file)
+```
+
+We change the column header names to something more descriptive:
+```{r message=FALSE}
+colnames(lusc_normal_grset) <- c("Composite Element REF", "Beta_value", "Chromosome", "Start", "End", "Gene_Symbol", "Gene_Type", "Transcript_ID", "Position_to_TSS", "CGI_Coordinate")
+colnames(lusc_tumor_grset) <- c("Composite Element REF", "Beta_value", "Chromosome", "Start", "End", "Gene_Symbol", "Gene_Type", "Transcript_ID", "Position_to_TSS", "CGI_Coordinate")
+
+lusc_normal_grset
+```
+
+Return the methylation probe locations as a GRanges object:
+
+```{r message=FALSE}
+meth_probes_normal_gr <- granges(lusc_normal_grset)
+meth_probes_tumor_gr <- granges(lusc_tumor_grset)
+
+head(meth_probes_normal_gr, n = 3)
+```
+
+## Genetic Variants (SNPs)
+
+The presence of SNPs at the nucleotide level can adversely impact our downstream methylation analysis, thus minfi offers a way to remove these. The function **getSnpInfo** (applied to a GenomicRatioSet) returns a data frame with 6 columns containing the SNP information:
+
+```{r message=FALSE}
+lusc_snps <- getSnpInfo(lusc_tumor_grset)
+head(lusc_snps,10)
+```
+
+The columns with an 'rs' give the SNP names while the columns with 'maf' give the allele frequency of the SNPs (based on the dbSNP database). The function **addSnpInfo** adds this information to the GenomicRanges of the GenomicRatioSet:
+
+```{r message=FALSE}
+lusc_tumor_grset <- addSnpInfo(lusc_tumor_grset)
+```
+
+It is recommended to drop all methylation probes that contain either a SNP at the CpG level or at the single nucleotide extension level. The function **dropLociWithSnps** achieves this. The original GenomicRatioSet object   contains 14,998 rows:
+
+```{r message=FALSE}
+dim(lusc_tumor_grset)
+```
+
+After applying dropLociWithSnps the same object contains 14,476 (minus 522 rows).
+```{r message=FALSE}
+lusc_normal_grset <- dropLociWithSnps(lusc_normal_grset, snps=c("SBE","CpG"), maf=0)
+lusc_tumor_grset <- dropLociWithSnps(lusc_tumor_grset, snps=c("SBE","CpG"), maf=0)
+dim(lusc_normal_grset)
+
+```
+
+```{r message=FALSE}
+beta <- getBeta(lusc_tumor_grset)
+#m <- getM(lusc_tumor_grset) # raises non-numeric argument error
+cn <- getCN(lusc_tumor_grset)
+cn
+```
+TCGA files contain Beta-values (not M-values) and some unfortunately seem to lack copy number data (as the NULL above indicates). Below we combine the two datasets into one object.
+
+```{r message=FALSE}
+source("../workflow/combineTCGAfiles.R")
+combined <- combineTCGAfiles(lusc_normal_grset, lusc_tumor_grset, verbose = TRUE)
+combined
+```
+
+We have combined a matched set of normal/tumor methylation Beta-values from TCGA into a single GenomicRatioSet. 
+
+An alternative way to download and prepare the same data as above from TCGA is by using **TCGAbiolinks**.
+
+```{r message=FALSE, progress=FALSE}
+library(TCGAbiolinks)
+
+query.met.lusc <- GDCquery(project = "TCGA-LUSC", 
+                           legacy = TRUE, 
+                           data.category = "DNA methylation",
+                           platform = "Illumina Human Methylation 450",
+                           barcode = c("TCGA-43-6771-01A-11D-1818-05", "TCGA-43-6771-11A-01D-1818-05"))
+GDCdownload(query.met.lusc)
+```
+
+The above code prepares the query while the following executes and deposits the data (LUSCmet-paired.rda) in the current working directory.  
+
+```{r message=FALSE}
+met.lusc.450 <- GDCprepare(query = query.met.lusc,
+                        save = TRUE,
+                        save.filename = "LUSCmet-paired.rda" ,
+                        summarizedExperiment = TRUE)
+```
+
+
+From here the paired data can be loaded directly into R.
+```{r message=FALSE}
+LUSCmet <- load(file = "LUSCmet-paired.rda")
+LUSCmet
+```
+
+This is the end of **Section Two**. Go to [Section Three](./Tutorial-3.html).

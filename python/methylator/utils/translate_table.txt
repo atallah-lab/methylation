@@ -1,0 +1,24 @@
+Translation Table - Illumina Platform <-> GDC format
+
+TargetID 		--> 'Composite Element REF' Identifies the probe name				
+ProbeID  		--> ''						Illumina identifier for probe sequence
+GID 	 		--> ''						RefSeq entry identifier (GI number)
+ACCESSION 		--> '' 						RefSeq entry (NM or XM number)
+SYMBOL 			--> 'Gene_Symbol'			Gene name as reported in RefSeq 	
+GENE_ID 		--> ''						RefSeq identifier (GeneID)
+CHROMOSOME  	--> 'Chromosome'			Chromosome on which the target locus is located						
+REFSEQ 			--> ''						RefSeq version
+CPG_COORDINATE	--> 'CGI_Coordinate'		Chromosome coordinate of C in the CpG locus
+DIST_TO_TSS 	--> 'Position_to_TSS'		Distance from Transcription Start Site in bp		
+CPG_ISLAND	    --> ''						Boolean variable denoting whether probe is located in a CpG							
+SYNONYM 		--> ''						Other names for the same gene
+ANNOTATION		--> ''						Gene description from NCBI RefSeq 		
+PRODUCT 		--> ''						Protein name from NCBI	
+CG_NO 			--> ''						Unique CpG locus identifier (Illumina)
+AVG_Beta 		--> 'Beta_value'			Methylation level (beta) of the CpG locus (in group)
+''				<-- 'Gene_Type'				Functional designation of the gene (i.e. protein coding)	
+''				<-- 'Transcript_ID'			Ensembl transcript identifier
+''				<-- 'Feature_Type'			CpG features (i.e. island, shore)
+''				<-- 'Start'					Unique CpG locus start site
+''				<--	'End'					Unique CpG locus end site
+
