@@ -46,34 +46,3 @@ class SNP:
     def __init__(self):
         self.probeid = None
         self.snpid = None
-
-class Interval:
-    """
-    Defines a chromosomal interval.
-    """
-
-    def __init__(self, chromosome, start, end):
-        self.chr = chromosome
-        self.start = start
-        self.end = end
-
-class Location:
-    """
-    Defines a probe location.
-    """
-    BODY = "Body"
-    TSS200 = "TSS200"
-    TSS1500 = "TSS1500"
-    UTR5 = "5'UTR"
-    UTR3 = "3'UTR"
-    EXON = "Exon"
-
-class CpG_location:
-    """
-    CpG location is defined here.
-    """
-    ISLAND = "Island"
-    NSHORE = "N_Shore"
-    SSHORE = "S_Shore"
-    NSHELF = "N_Shelf"
-    SSHELF = "S_Shelf"
