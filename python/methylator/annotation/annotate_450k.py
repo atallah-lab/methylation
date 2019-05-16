@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 
 class Probe:
@@ -46,7 +48,16 @@ class CpG_location:
     SSHORE = "S_Shore"
     NSHELF = "N_Shelf"
     SSHELF = "S_Shelf"
+    
+class SNP:
+    """
+    Defines the SNPs in probes. Used to filter probes.
+    """
 
+    def __init__(self):
+        self.probeid = None
+        self.snpid = None
+    
 class Annotate_450k:
     """
     Parse and hold information about Illumina probes.
@@ -99,6 +110,15 @@ class Annotate_450k:
             print("WARNING: No probe with ref-id of %s found." % probe_id)
         return probe
 
+    def get_all_probes(self):
+        """
+        Return list of all probes.
+        """
+        probe_list = []
+        for probe in self.probe.keys():
+            probe_list.append(self.get_probe(probe))
+        return probe_list
+    
     def get_probes_by_list(self, list_of_ids):
         """
         Return a list of probes from a list of references.
@@ -108,7 +128,7 @@ class Annotate_450k:
             out_list.append(self.get_probe(probe_id))
 
         return out_list
-
+    
     def get_probe_refs_by_gene(self, gene_name):
         """
         Get all probe references associated with a gene.
@@ -198,13 +218,48 @@ class Annotate_450k:
         Get genomic coordinate of a single probe.
         """
         return probe.cord
+    
+    def get_sorted_probes_by_id(self):
+        """
+        Sort probes according to probe id.
+        """
+        sorted_keys = sorted(list(self.probe.keys()))
+        return sorted_keys
+    
+    def get_sorted_probes_by_chr(self):
+        """
+        Sort probes according to probe id.
+        """
+        return sorted(self.get_all_probes(), key=lambda x: x.chr)
+    
+    def remove_snp_probes(self):
+        """
+        Removes all SNPs associated with probes.
+        """
+        snp_list = []
+        snp_file = open("../../data/humanmethylation450_dbsnp137.snpupdate.table.v2.sorted.txt", "r")
+        for line in snp_file:
+            if line.startswith("cg"):
+                line = line.strip("\n").strip("\r").split("\t")
+                new_snp = SNP()
+                new_snp.probeid = line[0]
+                new_snp.snpid = line[1]
+                snp_list.append(new_snp)
 
-    def sort_coord_probe(self, probes):
-        """
-        Sort probes based on genomic location.
-        """
-        s_probes = sorted(probes, key=self.get_coord)
-        return s_probes
+        for snp in snp_list:
+            self.probe.pop(snp.probeid)
+
+anno_file = os.path.abspath("../../data/config.ini") # Illumina probe manifest. Note: This (large) file is not 
+                                                     # in the repository.
+
+# Functions to save/load dictionary objects. 
+
+import _pickle as pickle
+
+def save_obj(obj, name):
+    with open('../../data/pickle/'+ name + '.pkl', 'wb+') as f:
+        pickle.dump(obj, f)
         
-#anno_file = os.path.abspath("../../data/config.ini") # Illumina probe manifest. Note: The (large) file is not 
-                                                     # in the repository. Github has a 100 Mb file size limit. 
+def load_obj(name):
+    with open('../../data/pickle/' + name + '.pkl', 'rb') as f:
+        return pickle.load(f)
