@@ -1,0 +1,3 @@
+id	filename	md5	size	state
+bd2c1469-848e-4fc3-8fe1-9d96c073eabd	bd2c1469-848e-4fc3-8fe1-9d96c073eabd/jhu-usc.edu_LUSC.HumanMethylation450.4.lvl-3.TCGA-43-6771-01A-11D-1818-05.gdc_hg38.txt	6f967891cf12b7709c330b83a48f2135	141276398	validated
+e7441209-833d-4c2c-9bcc-fae5b1c7f3ff	e7441209-833d-4c2c-9bcc-fae5b1c7f3ff/jhu-usc.edu_LUSC.HumanMethylation450.4.lvl-3.TCGA-43-6771-11A-01D-1818-05.gdc_hg38.txt	59d3a880d07cee9651c2a4d8c5d7c9d1	141298913	validated
