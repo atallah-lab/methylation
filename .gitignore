@@ -112,9 +112,30 @@ venv.bak/
 /site
 
 # odds and sods
-GSE42308.xlsx
+*.xlsx
 humanmethylation450_dbsnp137.snpupdate.table.v2.sorted.txt
 data/HumanMethylation450_15017482_v1-2.csv
 data/ilmn.450k.annotated.hg19.xlsx
-data/pickle/*.pkl
+data/pickle/UCSC_lookup.pkl
+data/pickle/TCGA-15-5420-LUAD.pkl
+data/pickle/TCGA-38-4631-LUAD.pkl
+data/pickle/TCGA-49-4488-LUAD.pkl
+data/pickle/TCGA-18-5595-LUSC.pkl
+data/pickle/TCGA-22-5471-LUSC.pkl
+data/pickle/TCGA-39-5031-LUSC.pkl
+data/pickle/TCGA-AA-3697-COAD.pkl
+data/pickle/TCGA-AA-3506-COAD.pkl
+data/pickle/TCGA-AZ-6599-COAD.pkl
+data/pickle/TCGA-33-4589-LUSC.pkl
+data/pickle/TCGA-33-4586-LUSC.pkl
+data/pickle/TCGA-50-5932-LUAD.pkl
+data/pickle/TCGA-06-0152-GBM.pkl
+data/pickle/Illumina-450k-Anno.hg19.pkl
+data/pickle/TCGA-BH-A0BZ-BRCA.pkl
+data/pickle/TCGA-A6-2686-COAD.pkl
+data/pickle/TCGA-A6-2682-COAD.pkl
+data/pickle/TCGA-50-5935-LUAD.pkl
+data/pickle/TCGA-BH-A1F5-BRCA.pkl
+data/pickle/TCGA-BH-A1EN-BRCA.pkl
 Illumina-Manifest.docx
+data/johnshopkins-data/*

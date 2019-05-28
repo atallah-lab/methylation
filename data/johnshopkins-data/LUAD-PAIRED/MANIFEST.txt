@@ -1,3 +1,0 @@
-id	filename	md5	size	state
-d2e4c448-1323-42a8-9718-8680b7ad1ab7	jhu-usc.edu_LUAD.HumanMethylation450.3.lvl-3.TCGA-50-5931-01A-11D-1756-05.gdc_hg38.txt	15fee908073c1578572aab54b4194d8e	141244541	released
-518780de-9395-4712-8398-612c4bd5110f	jhu-usc.edu_LUAD.HumanMethylation450.3.lvl-3.TCGA-50-5931-11A-01D-1756-05.gdc_hg38.txt	e3a3e1b307f7ebbd80b8f80df67aa492	141242315	released
