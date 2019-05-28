@@ -19,30 +19,3 @@ class Feature:
         else:
             self.feature_title = "gene"
             self.feature = feature
-
-
-class Probe:
-    """
-    Holds probe info.
-    """
-    def __init__(self):
-        self.id = None
-        self.seq = None
-        self.name = None
-        self.chr = None
-        self.cord = None
-        self.strand = None
-        self.gene = None
-        self.refseq = None
-        self.beta = None
-        self.tour = None
-        self.loc = None
-
-class SNP:
-    """
-    Defines SNPs in probes. Used to filter probes.
-    """
-
-    def __init__(self):
-        self.probeid = None
-        self.snpid = None

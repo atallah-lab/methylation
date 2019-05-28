@@ -25,7 +25,7 @@ class Sample:
 
 class ParseBatch:
     """
-    Parse a series of data in a folder.
+    Parse a series of data samples given a path to a folder.
     """
 
     def __init__(self, folder, delim="\t", beta_header=""):
@@ -40,7 +40,7 @@ class ParseBatch:
 
 class ParseFile:
     """
-    Parse a single file. The file could still have multiple groups. This module automatically finds and parses them.
+    Automatically find and parse CpG groups from a supplied file.
     """
 
     def __init__(self, filename, delim="\t", beta_header=""):
