@@ -112,7 +112,10 @@ venv.bak/
 /site
 
 # odds and sods
-*.xlsx
+*l.xlsx
+*r.xlsx
+data/johnshopkins-data/GBM-PAIRED/TCGA-06-0152-GBM-Primary.xlsx
+data/johnshopkins-data/GBM-PAIRED/TCGA-06-0152-GBM-Secondary.xlsx
 humanmethylation450_dbsnp137.snpupdate.table.v2.sorted.txt
 data/HumanMethylation450_15017482_v1-2.csv
 data/ilmn.450k.annotated.hg19.xlsx
